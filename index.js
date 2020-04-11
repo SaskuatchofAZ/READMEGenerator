@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
+const axios = require("axios");
 
 inquirer.prompt([
     {
@@ -46,10 +47,16 @@ inquirer.prompt([
     },
     {
        type: "input",
-       message: "Please enter your GitHub username.",
+       message: "Please enter your GitHub username so I can add a link and your profile picture to the README",
        name: "username" 
     }
 ]).then(response => {
-    console.log(response);
+    fs.writeFile("./READMEs/README.md", `# ${response.projectName} \n \n`, err => {
+        if (err) throw err;
+    });
+
+    fs.appendFile("./READMEs/README.md", `## Description \n ${response.description} \n \n`, err => {
+        if (err) throw err;
+    });
 });
     
