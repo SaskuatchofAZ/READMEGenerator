@@ -9,23 +9,22 @@ inquirer.prompt([
         name: "projectName"
     },
     {
-        type: "checkbox",
-        message: "What kind of GitHub tracking badge(s) would you like to add to the README?",
-        choices: ["Version", "Release date", "Last commit", "Commit activity", "GitHub contributors"],
-        name: "badges" 
+        type: "confirm",
+        message: "Would you like a GitHub followers badge in the README?",
+        name: "badge" 
     },
     {
-        type: "input",
+        type: "editor",
         message: "Let's add a description of your project.",
         name: "description"
     },
     {
-        type: "input",
+        type: "editor",
         message: "How would you install this project? (Don't forget to include any dependencies!)",
         name: "install"
     },
     {
-        type: "input",
+        type: "editor",
         message: "What is the purpose of your project? (What is used for?)",
         name: "usage"
     },
@@ -36,14 +35,19 @@ inquirer.prompt([
         name: "license"
     },
     {
-        type: "input",
+        type: "editor",
         message: "What are some guidelines to contributing?",
         name: "contribution"
     },
     {
-       type: "input",
+       type: "editor",
        message: "How are you testing the project?",
        name: "testing" 
+    },
+    {
+        type: "editor",
+        message: "Are there any credits you would like to add to the README? (Contributors, tutorials used, prior dependencies needed to run the program)",
+        name: "credits"
     },
     {
        type: "input",
@@ -55,7 +59,40 @@ inquirer.prompt([
         if (err) throw err;
     });
 
+    if (response.badge) {
+        fs.appendFile("./READMEs/README.md", `![GitHub followers](https://img.shields.io/github/followers/${response.username}?style=social)\n \n`, err => {
+            if (err) throw err;
+    })};
+
     fs.appendFile("./READMEs/README.md", `## Description \n ${response.description} \n \n`, err => {
+        if (err) throw err;
+    });
+
+    fs.appendFile("./READMEs/README.md", `## Table of Contents \n* [Installation](#installation) \n* [Usage](#usage)\n* [Contributing](#contributing)\n* [Credits](#credits)\n* [License](#license)\n* [Testing](#testing)\n* [GitHub info](#GitHub)\n \n`, err => {
+        if (err) throw err;
+    });
+    
+    fs.appendFile("./READMEs/README.md", `## Installation \n ${response.install} \n \n`, err => {
+        if (err) throw err;
+    });
+
+    fs.appendFile("./READMEs/README.md", `## Usage \n ${response.usage} \n \n`, err => {
+        if (err) throw err;
+    });
+
+    fs.appendFile("./READMEs/README.md", `## License \n ${response.license} \n \n`, err => {
+        if (err) throw err;
+    });
+
+    fs.appendFile("./READMEs/README.md", `## Contribution Guidelines \n ${response.contribution} \n \n`, err => {
+        if (err) throw err;
+    });
+
+    fs.appendFile("./READMEs/README.md", `## Credits \n ${response.credits} \n \n`, err => {
+        if (err) throw err;
+    });
+
+    fs.appendFile("./READMEs/README.md", `## Testing \n ${response.testing} \n \n`, err => {
         if (err) throw err;
     });
 });
