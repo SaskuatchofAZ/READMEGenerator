@@ -10,8 +10,13 @@ inquirer.prompt([
     },
     {
         type: "confirm",
-        message: "Would you like a GitHub followers badge in the README?",
+        message: "Would you like a GitHub repo size badge for your repository in the README?",
         name: "badge" 
+    },
+    {
+        type: 'input',
+        message: 'If so what is the exact name of the repository?',
+        name: 'repoName'
     },
     {
         type: "editor",
@@ -50,9 +55,9 @@ inquirer.prompt([
         name: "credits"
     },
     {
-       type: "input",
-       message: "Please enter your GitHub username so I can add a link and your profile picture to the README",
-       name: "username" 
+        type: "input",
+        message: "Please enter your GitHub username so I can add your email and profile picture to the README",
+        name: "username"
     }
 ]).then(response => {
     fs.writeFile("./READMEs/README.md", `# ${response.projectName} \n \n`, err => {
@@ -60,7 +65,7 @@ inquirer.prompt([
     });
 
     if (response.badge) {
-        fs.appendFile("./READMEs/README.md", `![GitHub followers](https://img.shields.io/github/followers/${response.username}?style=social)\n \n`, err => {
+        fs.appendFile("./READMEs/README.md", `![GitHub repo size](https://img.shields.io/github/repo-size/${response.username}/${response.repoName})\n \n`, err => {
             if (err) throw err;
     })};
 
@@ -71,7 +76,7 @@ inquirer.prompt([
     fs.appendFile("./READMEs/README.md", `## Table of Contents \n* [Installation](#installation) \n* [Usage](#usage)\n* [Contributing](#contributing)\n* [Credits](#credits)\n* [License](#license)\n* [Testing](#testing)\n* [GitHub info](#GitHub)\n \n`, err => {
         if (err) throw err;
     });
-    
+
     fs.appendFile("./READMEs/README.md", `## Installation \n ${response.install} \n \n`, err => {
         if (err) throw err;
     });
@@ -95,5 +100,14 @@ inquirer.prompt([
     fs.appendFile("./READMEs/README.md", `## Testing \n ${response.testing} \n \n`, err => {
         if (err) throw err;
     });
+
+    axios({
+        method: 'get',
+        url: `https://api.github.com/users/${response.username}`
+    }).then(res => {
+        res = res.data
+        fs.appendFile("./READMEs/README.md", `## Questions \n ![GitHub Avatar](${res.avatar_url}) \nAny questions should be submitted through my \nemail: ${res.email} \nor GitHub profile: ${res.html_url}` , err => {
+            if (err) throw err;
+        })
+    })
 });
-    
